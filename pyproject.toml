@@ -1,0 +1,54 @@
+[project]
+name = "summarizer"
+version = "0.1.0"
+description = "Text summarization project using T5 and XSum dataset"
+authors = [
+    {name = "Michał Furgała",email = "83299832+00200200@users.noreply.github.com"}
+]
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "torch>=2.2.0",
+    "transformers>=4.37.0",
+    "datasets>=2.18.0",
+    "gradio>=4.19.0",
+    "numpy>=1.24.0",
+    "tqdm>=4.66.0",
+    "evaluate>=0.4.0",
+    "rouge-score>=0.1.2",
+    "nltk>=3.8.0",
+    "matplotlib>=3.7.0",
+]
+
+[tool.poetry]
+name = "summarizer"
+version = "0.1.0"
+description = "Text summarization project using T5 and XSum dataset"
+authors = ["Michał Furgała <83299832+00200200@users.noreply.github.com>"]
+packages = [{include = "src"}]
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.9.1"
+pylint = "^2.15.0"
+pytest = "^8.0.0"
+pre-commit = "^3.6.0"
+
+[build-system]
+requires = ["poetry-core>=2.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 88
+target-version = ['py39']
+include = '\.pyi?$'
+
+[tool.pylint.messages_control]
+disable = [
+    "C0111",  # missing-docstring
+    "C0103",  # invalid-name
+    "C0330",  # bad-continuation
+    "C0326",  # bad-whitespace
+]
+
+[tool.pylint.format]
+max-line-length = 88
