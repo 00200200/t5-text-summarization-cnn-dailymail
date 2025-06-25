@@ -33,4 +33,4 @@ repos:
       - id: pylint
         types: [python]
         args: ['--disable=C0111,C0114,missing-docstring', '--max-line-length=88']
-        additional_dependencies: [torch, transformers]
+        additional_dependencies: [torch, transformers, datasets]
