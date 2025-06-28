@@ -6,10 +6,9 @@ from torch.optim import AdamW
 from tqdm import tqdm
 from transformers import get_scheduler
 
-# pylint: disable=import-error
 from src.utils.utils import eval_rouge
 
-# pylint: disable=too-many-locals
+
 def train_model(model, train_loader, val_loader, epochs=5, dataset_name="xsum"):
     optimizer = AdamW(model.parameters(), lr=5e-5)
     num_training_steps = len(train_loader) * epochs
@@ -60,7 +59,9 @@ def train_model(model, train_loader, val_loader, epochs=5, dataset_name="xsum"):
 
     # Save history
     os.makedirs("results", exist_ok=True)
-    with open(f"results/{dataset_name}_training_history.json", "w", encoding="utf-8") as file_handle:
+    with open(
+        f"results/{dataset_name}_training_history.json", "w", encoding="utf-8"
+    ) as file_handle:
         json.dump(history, file_handle, indent=2)
 
     return model, history
