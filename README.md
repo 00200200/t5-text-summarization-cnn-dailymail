@@ -97,7 +97,8 @@ Summarizer/
 ### Setup
 
 ```bash
-git clone https://github.com/yourusername/summarizer.git
+git clone https://github.com/00200200/t5-text-summarization-cnn-dailymail
+
 cd summarizer
 poetry install
 ```
