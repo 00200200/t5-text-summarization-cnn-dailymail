@@ -1,16 +1,10 @@
-# 🤖 Text Summarizer
-
-[![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://python.org)
-[![PyTorch](https://img.shields.io/badge/PyTorch-2.2+-red.svg)](https://pytorch.org)
-[![Transformers](https://img.shields.io/badge/Transformers-4.37+-green.svg)](https://huggingface.co)
-[![Poetry](https://img.shields.io/badge/Poetry-Package%20Manager-blue.svg)](https://python-poetry.org)
-[![Gradio](https://img.shields.io/badge/Gradio-UI-orange.svg)](https://gradio.app)
+# Text Summarizer
 
 Simple text summarizer using T5-small model, trained on CNN/DailyMail and XSum datasets.
 
 ![Summarizer GUI](docs/app_gui.png)
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
 # Install dependencies
@@ -23,7 +17,7 @@ poetry run python -m src.app.app
 poetry run python -m src.main
 ```
 
-## 📊 Results
+## Results
 
 ### CNN/DailyMail (5 epochs)
 
@@ -37,14 +31,14 @@ poetry run python -m src.main
 - **ROUGE-2**: 9.1%
 - **ROUGE-L**: 23.3%
 
-## 🌟 Features
+## Features
 
-- ✅ **Two Models**: CNN/DailyMail (detailed) and XSum (concise)
-- ✅ **Web Interface**: Easy-to-use Gradio UI
-- ✅ **Apple Silicon**: Native MPS support
-- ✅ **Clean Code**: Simple and maintainable
+- **Two Models**: CNN/DailyMail (detailed) and XSum (concise)
+- **Web Interface**: Easy-to-use Gradio UI
+- **Apple Silicon**: Native MPS support
+- **Clean Code**: Simple and maintainable
 
-## 📊 Learning Curves
+## Learning Curves
 
 ### XSum Progress
 
@@ -54,7 +48,7 @@ poetry run python -m src.main
 
 ![CNN Training](results/plots/cnn_dailymail_training_curves.png)
 
-## 🎯 Example Outputs
+## Example Outputs
 
 ### XSum Example
 
@@ -72,22 +66,22 @@ poetry run python -m src.main
 
 **Model:** Daniel Radcliffe says he has no plans to fritter his cash away on fast cars, drink and celebrity parties. At 18, he will be able to gamble in a casino, buy a drink in a pub or see the horror film "Hostel: Part II" Radcliffe's earnings from the first five Potter films have been held in a trust fund.
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 Summarizer/
-├── 📄 README.md
-├── 📄 pyproject.toml        # Dependencies
+├── README.md
+├── pyproject.toml        # Dependencies
 └── src/
-    ├── 🧠 model/model.py    # T5 Model
-    ├── 📊 data/dataio.py    # Data Loading
-    ├── 🏋️ train/train.py    # Training Loop
-    ├── 📈 utils/utils.py    # ROUGE Metrics
-    ├── 🧪 test.py           # Model Testing
-    └── 🚀 main.py           # Entry Point
+    ├── model/model.py    # T5 Model
+    ├── data/dataio.py    # Data Loading
+    ├── train/train.py    # Training Loop
+    ├── utils/utils.py    # ROUGE Metrics
+    ├── test.py           # Model Testing
+    └── main.py           # Entry Point
 ```
 
-## 🛠️ Installation
+## Installation
 
 ### Prerequisites
 
@@ -103,7 +97,7 @@ cd summarizer
 poetry install
 ```
 
-## 🎯 Quick Start
+## Quick Start
 
 ```bash
 # Train on single dataset
@@ -116,7 +110,7 @@ poetry run python -m src.main
 poetry run python -m src.test
 ```
 
-## 🔧 Model Configuration
+## Model Configuration
 
 - **Base Model**: T5-small (60M params)
 - **Max Input Length**: 512 tokens
@@ -127,7 +121,7 @@ poetry run python -m src.test
 - **Total Code**: 156 lines
 - **Default Epochs**: 5
 
-## 📊 Training Details
+## Training Details
 
 - **Training Size**: 30,000 samples per dataset
 - **Validation Size**: 1,000 samples per dataset
@@ -135,7 +129,7 @@ poetry run python -m src.test
 - **Scheduler**: Linear with warmup
 - **Evaluation**: After each epoch
 
-## 🌐 Web Interface
+## Web Interface
 
 The project includes a user-friendly web interface built with Gradio that allows you to:
 
@@ -153,11 +147,11 @@ This will start a local server at http://127.0.0.1:7861 where you can access the
 
 ### Features
 
-- 📝 Text input with comfortable editing area
-- 🔄 Model selection (CNN/DailyMail or XSum)
-- 📊 Pre-loaded examples
-- 🧹 Clear button for convenience
-- 💫 Instant summarization
+- Text input with comfortable editing area
+- Model selection (CNN/DailyMail or XSum)
+- Pre-loaded examples
+- Clear button for convenience
+- Instant summarization
 
 ### Models
 
