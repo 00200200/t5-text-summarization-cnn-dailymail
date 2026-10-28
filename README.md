@@ -1,23 +1,38 @@
 # Text Summarizer
 
-Simple text summarizer using T5-small model, trained on CNN/DailyMail and XSum datasets.
+An experimental text summarization project that fine-tunes pretrained T5-small separately on subsets of CNN/DailyMail and XSum, with saved training histories and a Gradio interface.
 
 ![Summarizer GUI](docs/app_gui.png)
 
 ## Quick Start
 
+Complete the [installation](#installation) first. The web interface loads both
+`models/cnn_dailymail_epoch_5.pth` and `models/xsum_epoch_5.pth` at startup. These
+checkpoints are not included in the repository; generate them by fine-tuning or
+provide compatible local checkpoints before launching the app.
+
 ```bash
-# Install dependencies
-poetry install
-
-# Run the web interface
-poetry run python -m src.app.app
-
-# Or train models from scratch
+# Fine-tune pretrained T5-small on both datasets (downloads data and model weights)
 poetry run python -m src.main
+
+# Run the web interface after both epoch-5 checkpoints exist
+poetry run python -m src.app.app
 ```
 
-## Results
+Fine-tuning can take substantial time. Review the defaults below before starting.
+
+## Saved Results
+
+The values below are the final (epoch 5) entries in the checked-in
+[CNN/DailyMail history](results/cnn_dailymail_training_history.json) and
+[XSum history](results/xsum_training_history.json), multiplied by 100 and rounded
+to one decimal place. The training code computes ROUGE on the validation subset
+after each epoch. These are archived validation results, not a fresh reproduction
+or a full test-set benchmark.
+
+The histories contain loss and ROUGE values but no seed, checkpoint identifier,
+code revision, or full run configuration. The defaults documented below describe
+the current code and cannot establish the exact configuration of those saved runs.
 
 ### CNN/DailyMail (5 epochs)
 
@@ -33,10 +48,9 @@ poetry run python -m src.main
 
 ## Features
 
-- **Two Models**: CNN/DailyMail (detailed) and XSum (concise)
-- **Web Interface**: Easy-to-use Gradio UI
-- **Apple Silicon**: Native MPS support
-- **Clean Code**: Simple and maintainable
+- **Two Fine-Tuning Targets**: Separate CNN/DailyMail and XSum checkpoints
+- **Web Interface**: Gradio UI with model selection and an example input
+- **Device Selection**: MPS when available, otherwise CPU; CUDA is not selected by the current code
 
 ## Learning Curves
 
@@ -49,6 +63,12 @@ poetry run python -m src.main
 ![CNN Training](results/plots/cnn_dailymail_training_curves.png)
 
 ## Example Outputs
+
+These illustrative outputs are retained from the original README. Their inputs
+and references appear in [`src/test.py`](src/test.py), but the displayed predictions
+are not linked to a saved checkpoint or run record. Separate generated examples
+are stored in [`results/xsum_examples.json`](results/xsum_examples.json) and
+[`results/cnn_dailymail_examples.json`](results/cnn_dailymail_examples.json).
 
 ### XSum Example
 
@@ -69,7 +89,7 @@ poetry run python -m src.main
 ## Project Structure
 
 ```
-Summarizer/
+t5-text-summarization-cnn-dailymail/
 ├── README.md
 ├── pyproject.toml        # Dependencies
 └── src/
@@ -77,7 +97,8 @@ Summarizer/
     ├── data/dataio.py    # Data Loading
     ├── train/train.py    # Training Loop
     ├── utils/utils.py    # ROUGE Metrics
-    ├── test.py           # Model Testing
+    ├── app/app.py        # Gradio interface (requires local checkpoints)
+    ├── test.py           # Prints summaries for fixed example inputs
     └── main.py           # Entry Point
 ```
 
@@ -93,49 +114,61 @@ Summarizer/
 ```bash
 git clone https://github.com/00200200/t5-text-summarization-cnn-dailymail
 
-cd summarizer
+cd t5-text-summarization-cnn-dailymail
 poetry install
 ```
 
-## Quick Start
+## Training and Example Checks
 
 ```bash
-# Train on single dataset
+# Fine-tune on XSum only
 poetry run python -m src.main xsum
 
-# Train on both datasets
+# Fine-tune on CNN/DailyMail only
+poetry run python -m src.main cnn
+
+# Fine-tune on both datasets
 poetry run python -m src.main
 
-# Test trained models
+# Print example summaries using both local epoch-5 checkpoints
 poetry run python -m src.test
 ```
 
+`src.test` prints reference and generated summaries; it does not run assertions or
+compute aggregate test-set metrics. Training saves checkpoints under `models/`
+and writes histories, examples, and plots under `results/`.
+
 ## Model Configuration
 
-- **Base Model**: T5-small (60M params)
+- **Base Model**: Pretrained `t5-small`, loaded with `from_pretrained`
 - **Max Input Length**: 512 tokens
-- **Max Output Length**: 128/150 tokens
-- **Learning Rate**: 2e-4
+- **Target Tokenization Limit**: 128 tokens
+- **Generation Limit**: 150 tokens, with 4-beam search
+- **Learning Rate**: 5e-5
 - **Optimizer**: AdamW
 - **Device**: MPS/CPU
-- **Total Code**: 156 lines
 - **Default Epochs**: 5
 
 ## Training Details
 
-- **Training Size**: 30,000 samples per dataset
-- **Validation Size**: 1,000 samples per dataset
+- **Training Size**: First 30,000 entries of each training split; shuffled by the data loader
+- **Validation Size**: First 1,000 entries of each validation split
 - **Batch Size**: 16
-- **Scheduler**: Linear with warmup
+- **Scheduler**: Linear with 500 warmup steps
 - **Evaluation**: After each epoch
+
+These defaults are defined in [`src/main.py`](src/main.py),
+[`src/data/dataio.py`](src/data/dataio.py), and [`src/train/train.py`](src/train/train.py).
+Validation references are decoded from targets truncated to 128 tokens. The code
+does not set a random seed or record a full experiment configuration.
 
 ## Web Interface
 
-The project includes a user-friendly web interface built with Gradio that allows you to:
+The Gradio interface allows you to:
 
 - Choose between CNN/DailyMail and XSum models
-- Input any text and get instant summaries
-- Compare different model outputs
+- Enter text and generate a summary (input is truncated to 512 tokens)
+- Switch checkpoints to inspect their outputs on the same input
 
 ### Running the Interface
 
@@ -143,17 +176,22 @@ The project includes a user-friendly web interface built with Gradio that allows
 poetry run python -m src.app.app
 ```
 
-This will start a local server at http://127.0.0.1:7861 where you can access the web interface.
+Run this from the repository root after both checkpoint files are available.
+Open the local URL printed by Gradio; the application calls `demo.launch()` without
+fixing a port. Generation time depends on the device and input, and generated
+summaries may omit or invent details.
 
 ### Features
 
-- Text input with comfortable editing area
+- Text input
 - Model selection (CNN/DailyMail or XSum)
-- Pre-loaded examples
-- Clear button for convenience
-- Instant summarization
+- An example input
+- Clear button
+- Summary generation using the selected checkpoint
 
 ### Models
 
-- **CNN/DailyMail**: Generates longer, more detailed summaries
-- **XSum**: Creates short, one-sentence summaries
+- **CNN/DailyMail**: Checkpoint fine-tuned on article/highlights pairs
+- **XSum**: Checkpoint fine-tuned on document/summary pairs
+
+Both use the same generation settings; summary length and sentence count are not guaranteed.
